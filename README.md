@@ -42,7 +42,7 @@ Here’s how the pipeline flows behind the scenes:
 2. The fetched data is sent to **Amazon SQS**, which acts as a queue to handle real-time messages efficiently.
 3. Another **AWS Lambda** function processes that data — detecting trends, comparing price differences, and determining whether an alert should be sent.
 4. The latest processed prices are stored in **Amazon DynamoDB**, while complete historical data is archived in **Amazon S3** for future analytics or visualization.
-5. When a significant price movement (e.g., ±3%) is detected, **Amazon SNS** sends an instant alert.
+5. When a significant price movement (e.g., $\pm3\%$) is detected, **Amazon SNS** sends an instant alert.
 6. Throughout the process, **Amazon CloudWatch** monitors performance, tracks logs, and manages alarms to ensure everything runs smoothly.
 7. **Terraform** ties everything together, provisioning the infrastructure automatically and making deployment as simple as running a few commands.
 
@@ -55,27 +55,29 @@ In other words, StockPulse isn’t just about stocks — it’s about understand
 ---
 
 ### ⚙️ Tools & Services Used
-- **AWS Lambda** — serverless compute to run code automatically  
-- **Amazon EventBridge** — schedule triggers to fetch stock data  
-- **Amazon SQS** — reliable queue for real-time message handling  
-- **Amazon DynamoDB** — NoSQL database for fast, structured storage  
-- **Amazon S3** — object storage for historical and raw JSON data  
-- **Amazon SNS** — sends alerts when thresholds are met  
-- **Amazon CloudWatch** — monitoring, logging, and alerting  
-- **Terraform** — automates infrastructure setup and deployment  
+* **AWS Lambda** — serverless compute to run code automatically  
+* **Amazon EventBridge** — schedule triggers to fetch stock data  
+* **Amazon SQS** — reliable queue for real-time message handling  
+* **Amazon DynamoDB** — NoSQL database for fast, structured storage  
+* **Amazon S3** — object storage for historical and raw JSON data  
+* **Amazon SNS** — sends alerts when thresholds are met  
+* **Amazon CloudWatch** — monitoring, logging, and alerting  
+* **Terraform** — automates infrastructure setup and deployment  
 
 ---
 
-- **⚡ Architectural Challenges & Production Solutions** —
-- item 1 Handling Downstream Database Overload During High Volatility
-❌ The Challenge: During sudden market crashes or volume spikes, the external API emits massive waves of telemetry. Executing direct database writes from an unthrottled Lambda function risks exhausting connection pools, hitting provisioned throughput limits, and dropping critical data.
+## ⚡ Architectural Challenges & Production Solutions
 
-The Solution: Integrated an Amazon SQS Queue as an asynchronous middle layer. The processing Lambda consumes messages in micro-batches (BatchSize: 10), smoothing out traffic spikes, reducing database write invocations, and guaranteeing zero data loss.
+### 1. Handling Downstream Database Overload During High Volatility
+> ❌ **The Challenge:** During sudden market crashes or volume spikes, the external API emits massive waves of telemetry. Executing direct database writes from an unthrottled Lambda function risks exhausting connection pools, hitting provisioned throughput limits, and dropping critical data.
+> 
+> **The Solution:** Integrated an Amazon SQS Queue as an asynchronous middle layer. The processing Lambda consumes messages in micro-batches (BatchSize: 10), smoothing out traffic spikes, reducing database write invocations, and guaranteeing zero data loss.
 
-- item 1 Eliminating Idling Costs via Serverless Tiering (FinOps Strategy)
-❌ The Challenge: Traditional relational databases or persistent server instances accumulate high fixed costs even during market closure hours and weekends when data flows stop.
+### 2. Eliminating Idling Costs via Serverless Tiering (FinOps Strategy)
+> ❌ **The Challenge:** Traditional relational databases or persistent server instances accumulate high fixed costs even during market closure hours and weekends when data flows stop.
+> 
+> **The Solution:** Implemented an entirely serverless pay-per-use architecture. Utilizing DynamoDB On-Demand capacity scaling and S3 Lifecycle Policies to transition historical data to Glacier after 90 days, keeping operational overhead strictly close to $0 during market downtime.
 
-The Solution: Implemented an entirely serverless pay-per-use architecture. Utilizing DynamoDB On-Demand capacity scaling and S3 Lifecycle Policies to transition historical data to Glacier after 90 days, keeping operational overhead strictly close to $0 during market downtime.
+---
 
-**In summary:**  
-StockPulse is a real-world demonstration of how data can move automatically through the cloud — from fetching, processing, and storing to alerting — all in real time. It’s scalable, efficient, and entirely serverless, making it an ideal portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, and Data Engineering**.
+**In summary:** StockPulse is a real-world demonstration of how data can move automatically through the cloud — from fetching, processing, and storing to alerting — all in real time. It’s scalable, efficient, and entirely serverless, making it an ideal portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, and Data Engineering**.
