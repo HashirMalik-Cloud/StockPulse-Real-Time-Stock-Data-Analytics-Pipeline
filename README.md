@@ -46,7 +46,9 @@ Here’s how the pipeline flows behind the scenes:
 6. Throughout the process, **Amazon CloudWatch** monitors performance, tracks logs, and manages alarms to ensure everything runs smoothly.
 7. **Terraform** ties everything together, provisioning the infrastructure automatically and making deployment as simple as running a few commands.
 
-The beauty of StockPulse lies in its simplicity and scalability. It runs entirely on the AWS Free Tier, costs almost nothing to operate, and scales automatically as data volume grows. It’s a practical demonstration of how cloud-native, event-driven systems can be used to build powerful real-time analytics applications without needing to manage servers or complex backend systems.
+The beauty of StockPulse lies in its simplicity and scalability. It runs entirely on the AWS Free Tier, costs almost nothing to operate, and scales automatically as data volume grows. 
+
+It’s a practical demonstration of how cloud-native, event-driven systems can be used to build powerful real-time analytics applications without needing to manage servers or complex backend systems.
 
 From a learning perspective, this project introduces you to the core pillars of modern cloud development — **automation, event-driven architecture, data engineering, and serverless design**. Each component works together like a perfectly timed machine, turning live data into actionable insights.
 
@@ -80,4 +82,6 @@ In other words, StockPulse isn’t just about stocks — it’s about understand
 
 ---
 
-**In summary:** StockPulse is a real-world demonstration of how data can move automatically through the cloud — from fetching, processing, and storing to alerting — all in real time. It’s scalable, efficient, and entirely serverless, making it an ideal portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, and Data Engineering**.
+**In summary:** StockPulse is a real-world demonstration of how data can move automatically through the cloud — from fetching, processing, and storing to alerting — all in real time. 
+
+It’s scalable, efficient, and entirely serverless, making it an ideal portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, and Data Engineering**.
