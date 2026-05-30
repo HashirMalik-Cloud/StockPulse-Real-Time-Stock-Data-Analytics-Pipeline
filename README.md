@@ -38,21 +38,42 @@ StockPulse is a production-ready, event-driven serverless data pipeline that con
 
 Here’s how the pipeline flows behind the scenes:
 
-1. **Amazon EventBridge** triggers a Lambda function every minute to fetch the latest stock prices from a public API.
-2. The fetched data is sent to **Amazon SQS**, which acts as a queue to handle real-time messages efficiently.
-3. Another **AWS Lambda** function processes that data — detecting trends, comparing price differences, and determining whether an alert should be sent.
-4. The latest processed prices are stored in **Amazon DynamoDB**, while complete historical data is archived in **Amazon S3** for future analytics or visualization.
-5. When a significant price movement (e.g., $\pm3\%$) is detected, **Amazon SNS** sends an instant alert.
-6. Throughout the process, **Amazon CloudWatch** monitors performance, tracks logs, and manages alarms to ensure everything runs smoothly.
-7. **Terraform** ties everything together, provisioning the infrastructure automatically and making deployment as simple as running a few commands.
+1. **Amazon EventBridge** triggers a Lambda function every minute 
+   to fetch the latest stock prices from a public API.
+2. The fetched data is sent to **Amazon SQS**, which acts as 
+   a queue to handle real-time messages efficiently.
+3. Another **AWS Lambda** function processes that data — detecting 
+   trends, comparing price differences, and determining whether 
+   an alert should be sent.
+4. The latest processed prices are stored in **Amazon DynamoDB**, 
+   while complete historical data is archived in **Amazon S3** for future analytics or visualization.
+5. When a significant price movement (e.g., $\pm3\%$) is detected, 
+   **Amazon SNS** sends an instant alert.
+6. Throughout the process, **Amazon CloudWatch** monitors performance, 
+   tracks logs, and manages alarms to ensure everything runs smoothly.
+7. **Terraform** ties everything together, provisioning the 
+   infrastructure automatically and making deployment as simple 
+   as running a few commands.
 
-The beauty of StockPulse lies in its simplicity and scalability. It runs entirely on the AWS Free Tier, costs almost nothing to operate, and scales automatically as data volume grows. 
+The beauty of StockPulse lies in its simplicity and scalability. 
+It runs entirely on the AWS Free Tier, costs almost nothing to 
+operate, and scales automatically as data volume grows. 
 
-It’s a practical demonstration of how cloud-native, event-driven systems can be used to build powerful real-time analytics applications without needing to manage servers or complex backend systems.
+It’s a practical demonstration of how cloud-native, event-driven 
+systems can be used to build powerful real-time analytics applications 
+without needing to manage servers or complex backend systems.
 
-From a learning perspective, this project introduces you to the core pillars of modern cloud development — **automation, event-driven architecture, data engineering, and serverless design**. Each component works together like a perfectly timed machine, turning live data into actionable insights.
+From a learning perspective, this project introduces you to the core 
+pillars of modern cloud development — **automation, event-driven 
+architecture, data engineering, and serverless design**. Each component 
+works together like a perfectly timed machine, turning live data 
+into actionable insights.
 
-In other words, StockPulse isn’t just about stocks — it’s about understanding how to move, process, and react to real-time data in the cloud. Whether you’re exploring DevOps, Data Engineering, or Cloud Architecture, this project gives you hands-on exposure to how production-grade, real-time systems are built and automated.
+In other words, StockPulse isn’t just about stocks, it’s about 
+understanding how to move, process, and react to real-time data 
+in the cloud. If you’re exploring DevOps, Data Engineering, 
+or Cloud Architecture, this project gives you hands-on exposure 
+to how production-grade, real-time systems are built and automated.
 
 ---
 
@@ -71,17 +92,34 @@ In other words, StockPulse isn’t just about stocks — it’s about understand
 ## ⚡ Architectural Challenges & Production Solutions
 
 ### 1. Handling Downstream Database Overload During High Volatility
-> ❌ **The Challenge:** During sudden market crashes or volume spikes, the external API emits massive waves of telemetry. Executing direct database writes from an unthrottled Lambda function risks exhausting connection pools, hitting provisioned throughput limits, and dropping critical data.
+> ❌ **The Challenge:** During sudden market crashes or volume spikes, 
+> the external API emits massive waves of telemetry. Executing direct 
+> database writes from an unthrottled Lambda function risks exhausting 
+> connection pools, hitting provisioned throughput limits, and dropping 
+> critical data.
 > 
-> **The Solution:** Integrated an Amazon SQS Queue as an asynchronous middle layer. The processing Lambda consumes messages in micro-batches (BatchSize: 10), smoothing out traffic spikes, reducing database write invocations, and guaranteeing zero data loss.
+> **The Solution:** Integrated an Amazon SQS Queue as an asynchronous 
+> middle layer. The processing Lambda consumes messages in micro-batches 
+> (BatchSize: 10), smoothing out traffic spikes, reducing database 
+> write invocations, and guaranteeing zero data loss.
 
 ### 2. Eliminating Idling Costs via Serverless Tiering (FinOps Strategy)
-> ❌ **The Challenge:** Traditional relational databases or persistent server instances accumulate high fixed costs even during market closure hours and weekends when data flows stop.
+> ❌ **The Challenge:** Traditional relational databases or persistent 
+> server instances accumulate high fixed costs even during market closure 
+> hours and weekends when data flows stop.
 > 
-> **The Solution:** Implemented an entirely serverless pay-per-use architecture. Utilizing DynamoDB On-Demand capacity scaling and S3 Lifecycle Policies to transition historical data to Glacier after 90 days, keeping operational overhead strictly close to $0 during market downtime.
+> **The Solution:** Implemented an entirely serverless pay-per-use 
+> architecture. Utilizing DynamoDB On-Demand capacity scaling and 
+> S3 Lifecycle Policies to transition historical data to Glacier 
+> after 90 days, keeping operational overhead strictly close to $0 
+> during market downtime.
 
 ---
 
-**In summary:** StockPulse is a real-world demonstration of how data can move automatically through the cloud — from fetching, processing, and storing to alerting — all in real time. 
+**In summary:** StockPulse is a real-world demonstration of how data 
+can move automatically through the cloud. From fetching, processing, 
+and storing to alerting — all in real time. 
 
-It’s scalable, efficient, and entirely serverless, making it an ideal portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, and Data Engineering**.
+It’s scalable, efficient, and entirely serverless, making it an ideal 
+portfolio project for showcasing skills in **AWS, DevOps, Cloud Computing, 
+and Data Engineering**.
